@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الضريبة البنكية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#003366;
+  --primary-dark:#001f3f;
+  --accent:#f5c518;
+  --accent-dark:#d4a800;
+  --bg:#f4f6f9;
+  --white:#ffffff;
+  --text:#1a2332;
+  --muted:#5a6a7e;
+  --border:#e0e4ea;
+  --green:#0a7d4f;
+  --red:#c0392b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',Tahoma,sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+
+/* الشريط العلوي */
+.edu-bar{background:var(--primary-dark);color:#fff;text-align:center;padding:9px 16px;font-size:12.5px}
+.edu-bar span{color:var(--accent);font-weight:700}
+
+/* الهيدر */
+header{background:var(--primary);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.header-inner{max-width:1200px;margin:auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;cursor:pointer;}
+.logo-icon{width:42px;height:42px;background:var(--accent);border-radius:8px;display:grid;place-items:center;font-size:20px;color:var(--primary);font-weight:800}
+.logo-text strong{display:block;font-size:17px;color:#fff}
+nav{display:flex;gap:26px}
+nav a{color:#fff;text-decoration:none;font-size:14px;font-weight:600;padding:6px 0;position:relative;opacity:.9;transition:opacity .2s}
+nav a::after{content:'';position:absolute;bottom:0;right:0;width:0;height:3px;background:var(--accent);transition:width .25s}
+nav a:hover{opacity:1}
+nav a:hover::after{width:100%}
+.mobile-toggle{display:none;background:none;border:none;font-size:26px;color:#fff;cursor:pointer}
+
+/* حركات الانتقال بين الصفحات */
+.fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= الواجهة الأولى ================= */
+#main-interface { display: block; }
+.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;padding:90px 24px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;top:-20%;left:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(245,197,24,.08) 0%,transparent 70%);border-radius:50%}
+.hero h1{font-size:clamp(36px,7vw,72px);font-weight:800;color:var(--accent);position:relative;z-index:1;line-height:1.2}
+
+.container{max-width:1200px;margin:auto;padding:0 24px}
+.section{padding:64px 0}
+.section-title{text-align:center;margin-bottom:44px}
+.section-title h2{font-size:clamp(22px,3vw,28px);color:var(--primary);font-weight:800;margin-bottom:10px}
+.section-title .line{width:70px;height:4px;background:var(--accent);margin:16px auto 0;border-radius:2px}
+
+.info-grid{display:grid;grid-template-columns:1fr;max-width:600px;margin:0 auto;gap:22px}
+.info-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:30px 26px;transition:transform .25s,box-shadow .25s;position:relative;overflow:hidden}
+.info-card::before{content:'';position:absolute;top:0;right:0;left:0;height:4px;background:var(--accent)}
+.info-card:hover{transform:translateY(-6px);box-shadow:0 14px 36px rgba(0,51,102,.12)}
+.info-card .icon{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-size:24px;margin-bottom:16px;background:rgba(0,51,102,.07);border:1px solid rgba(0,51,102,.1)}
+.info-card h3{font-size:17px;color:var(--primary);margin-bottom:10px;font-weight:700}
+.info-card p{font-size:14px;color:var(--muted);line-height:1.9}
+.info-card .tag{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px}
+.tag-taxable{background:#fdecec;color:var(--red)}
+
+.calc-box{background:var(--primary);border-radius:18px;padding:44px;color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.calc-text h2{font-size:clamp(20px, 4vw, 26px);color:var(--accent);margin-bottom:14px;font-weight:800;line-height:1.4;}
+.calc-text p{color:#b8ccdf;font-size:14.5px;line-height:1.9}
+.calc-form{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:26px}
+.calc-form label{display:block;font-size:13px;color:#b8ccdf;margin-bottom:6px;font-weight:600}
+.calc-form input{width:100%;padding:13px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:15px;margin-bottom:16px}
+.calc-form input::placeholder{color:#7a96b0}
+.calc-form input:focus{outline:2px solid var(--accent);border-color:transparent}
+.calc-btn{width:100%;padding:14px;border:none;border-radius:8px;background:var(--accent);color:var(--primary);font:inherit;font-weight:800;font-size:16px;cursor:pointer;transition:background .2s}
+.calc-btn:hover{background:var(--accent-dark)}
+
+.edu-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.edu-step{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px 20px;text-align:center;position:relative}
+.edu-step .num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:var(--accent);display:grid;place-items:center;font-weight:800;font-size:16px;margin:0 auto 14px}
+.edu-step h3{font-size:15px;color:var(--primary);margin-bottom:8px;font-weight:700}
+.edu-step p{font-size:13px;color:var(--muted);line-height:1.8}
+
+/* ================= الواجهة الثانية ================= */
+#result-interface {
+  display: none;
+  min-height: 80vh;
+  padding: 40px 20px 100px 20px;
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+}
+.receipt-card {
+  background: var(--white);
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,51,102,.08);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.receipt-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--white);
+  position: relative;
+}
+.receipt-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--accent);
+}
+.receipt-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 5px; }
+.receipt-header p { font-size: 13px; color: #b8ccdf; direction: ltr; letter-spacing: 1px; }
+
+.receipt-body { padding: 30px; }
+.data-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px dashed var(--border); }
+.data-row:last-of-type { border-bottom: none; }
+.data-label { color: var(--muted); font-size: 14px; font-weight: 600; }
+.data-value { color: var(--primary); font-size: 16px; font-weight: 800; direction: ltr; }
+.data-row.highlight .data-value { color: var(--text); font-size: 18px; }
+
+.amount-row { background: var(--bg); border-radius: 10px; padding: 16px 20px; margin-top: 20px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.amount-label { color: var(--primary); font-weight: 700; font-size: 15px; }
+.amount-value { color: var(--primary); font-weight: 800; font-size: 18px; direction: rtl; }
+.amount-row.tax-row { background: #fff9e6; border-color: #f0d98c; }
+.amount-row.tax-row .amount-label { color: #8a6d1a; }
+.amount-row.tax-row .amount-value { color: var(--red); }
+
+.receipt-footer { padding: 20px 30px 30px; background: var(--white); display: flex; flex-direction: column; gap: 10px; }
+.action-btn { width: 100%; padding: 15px; border-radius: 10px; font-family: inherit; font-size: 16px; font-weight: 800; cursor: pointer; transition: all 0.2s; border: none; }
+.btn-primary { background: var(--accent); color: var(--primary); }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: transparent; color: var(--muted); border: 2px solid var(--border); }
+.btn-secondary:hover { background: var(--bg); color: var(--primary); border-color: var(--primary); }
+
+/* ================= الواجهة الثالثة ================= */
+#payment-interface {
+  display: none;
+  min-height: 80vh;
+  padding: 40px 20px 100px 20px;
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+}
+.payment-card {
+  background: var(--white);
+  width: 100%;
+  max-width: 550px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,51,102,.08);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.payment-header {
+  background: var(--primary);
+  padding: 25px 30px;
+  color: var(--white);
+  text-align: center;
+  border-bottom: 5px solid var(--accent);
+}
+.payment-header h2 { font-size: 20px; font-weight: 800; margin-bottom: 8px; line-height: 1.4; }
+.payment-header p { font-size: 13.5px; color: #b8ccdf; }
+
+.payment-body { padding: 30px; }
+.official-note {
+  background: #eef2f7;
+  border-right: 4px solid var(--primary);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  font-size: 14px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  text-align: center;
+}
+.official-note span { color: var(--green); font-size: 16px; font-weight: 800; }
+
+.bank-info-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+.manager-info {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed var(--border);
+}
+.manager-info p { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 5px; }
+.manager-info h4 { font-size: 18px; color: var(--primary); font-weight: 800; }
+
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px dashed #d0d5dc;
+}
+.info-line:last-child { border-bottom: none; }
+.info-title { color: var(--muted); font-size: 14px; font-weight: 600; }
+.info-data { color: var(--primary-dark); font-size: 16px; font-weight: 800; font-family: monospace; direction: ltr; letter-spacing: 0.5px; }
+
+.info-line.column { flex-direction: column; align-items: flex-start; gap: 8px; }
+.copy-container { display: flex; align-items: center; gap: 10px; width: 100%; justify-content: space-between; }
+.copy-btn {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.copy-btn:hover { background: var(--primary-dark); }
+
+.official-instruction-box {
+  background: #fff9e6;
+  border: 1px solid #f0d98c;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+.official-instruction-box p {
+  color: #8a6d1a;
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ================= شريط التنقل السفلي ================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  height: 70px;
+  z-index: 1000;
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+}
+.bottom-nav.active {
+  display: flex;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 4px;
+  cursor: pointer;
+  transition: color 0.2s;
+  width: 50%;
+  height: 100%;
+}
+.nav-item:hover, .nav-item.active {
+  color: var(--primary);
+}
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* فئات المساعدة */
+.hidden { display: none !important; }
+.show-flex { display: flex !important; }
+
+@media(max-width:900px){
+  .edu-steps{grid-template-columns:1fr 1fr}
+  .calc-box{grid-template-columns:1fr;padding:32px}
+  nav{display:none}
+  .mobile-toggle{display:block}
+  nav.open{display:flex;flex-direction:column;position:absolute;top:70px;right:0;left:0;background:var(--primary);padding:16px 24px;gap:12px;border-bottom:3px solid var(--accent);box-shadow:0 8px 20px rgba(0,0,0,.2)}
+  .header-inner{position:relative}
+}
+@media(max-width:600px){
+  .edu-steps{grid-template-columns:1fr}
+  .receipt-body, .payment-body { padding: 20px; }
+  .info-data { font-size: 13px; }
+  .official-instruction-box p { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- الشريط العلوي -->
+<div class="edu-bar">منصة إلكترونية للمعلومات المتعلقة بالرسوم المالية والضريبة البنكية</div>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" onclick="goToHome()">
+      <div class="logo-icon">ض</div>
+      <div class="logo-text">
+        <strong>الضريبة البنكية</strong>
+      </div>
+    </a>
+    <button class="mobile-toggle" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    <nav>
+      <a href="#types" onclick="goToHome()">الضريبة البنكية</a>
+      <a href="#calculator" onclick="goToHome()">تتبع معاملة الضريبة البنكية</a>
+      <a href="#learn" onclick="goToHome()">تعلّم</a>
+      <a href="#faq" onclick="goToHome()">الأسئلة</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= الواجهة الأولى ================= -->
+<div id="main-interface" class="fade-in">
+  <section class="hero">
+    <h1>الضريبة البنكية</h1>
+  </section>
+
+  <section class="section" id="types">
+    <div class="container">
+      <div class="section-title">
+        <h2>الضريبة البنكية</h2>
+        <div class="line"></div>
+      </div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="icon">📋</div>
+          <h3>الرسوم الصريحة</h3>
+          <p>الرسوم التي يدفعها العميل مباشرة مقابل خدمة (مثل مبلغ المنحة) تخضع للضريبة البنكية بنسبة 2%.</p>
+          <span class="tag tag-taxable">خاضعة — 2%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="calculator">
+    <div class="container">
+      <div class="calc-box">
+        <div class="calc-text">
+          <h2>تتبع معاملة الضريبة البنكية</h2>
+          <p>أدخل رقم الضريبة البنكية الخاص بك للمتابعة ومعرفة التفاصيل.</p>
+        </div>
+        <div>
+          <div class="calc-form">
+            <label for="taxIdInput">رقم الضريبة البنكية</label>
+            <input type="text" id="taxIdInput" placeholder="أدخل الرقم هنا..." style="text-align: left; direction: ltr;">
+            <button class="calc-btn" onclick="submitTaxId()">متابعة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="learn" style="background:var(--white);padding:64px 0">
+    <div class="container">
+      <div class="section-title">
+        <h2>كيف تعمل العملية؟</h2>
+        <div class="line"></div>
+      </div>
+      <div class="edu-steps">
+        <div class="edu-step">
+          <div class="num">1</div>
+          <h3>تحديد الخدمة</h3>
+          <p>يطلب العميل خدمة بنكية (تحويل، بطاقة، سحب...)</p>
+        </div>
+        <div class="edu-step">
+          <div class="num">2</div>
+          <h3>تحديد الرسم</h3>
+          <p>يحدد البنك الرسم الصريح للخدمة وفق تعرفته الرسمية</p>
+        </div>
+        <div class="edu-step">
+          <div class="num">3</div>
+          <h3>إضافة الضريبة</h3>
+          <p>تُضاف الضريبة البنكية بنسبة 2% على الرسوم الخاضعة</p>
+        </div>
+        <div class="edu-step">
+          <div class="num">4</div>
+          <h3>الدفع</h3>
+          <p>يدفع العميل الإجمالي (الرسم + الضريبة)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq" style="background:var(--white);padding:64px 0">
+    <div class="container" style="max-width:800px">
+      <div class="section-title">
+        <h2>الأسئلة</h2>
+        <div class="line"></div>
+      </div>
+      <details style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:12px">
+        <summary style="font-weight:700;color:var(--primary);cursor:pointer">ما هي الضريبة البنكية؟</summary>
+        <p style="margin-top:12px;color:var(--muted);font-size:14.5px">هي ضريبة تُطبّق على بعض الرسوم المصرفية الصريحة التي يدفعها العميل مقابل خدمات بنكية، وتُحسب كنسبة من قيمة الرسم.</p>
+      </details>
+      <details style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:12px">
+        <summary style="font-weight:700;color:var(--primary);cursor:pointer">ما هو الرسم الصريح؟</summary>
+        <p style="margin-top:12px;color:var(--muted);font-size:14.5px">الرسم الصريح هو مبلغ يُطلب من العميل مباشرة (مثل مقابل مبلغ المنحة)، وتُضاف عليه الضريبة البنكية بنسبة 2%.</p>
+      </details>
+      <details style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:12px">
+        <summary style="font-weight:700;color:var(--primary);cursor:pointer">هل تختلف الرسوم بين البنوك السعودية؟</summary>
+        <p style="margin-top:12px;color:var(--muted);font-size:14.5px">نعم، تختلف الرسوم من بنك لآخر، لكن هناك حدود قصوى تحددها تعرفة البنك المركزي السعودي (ساما) لبعض الخدمات مثل التحويلات المحلية والسحب الدولي.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<!-- ================= الواجهة الثانية ================= -->
+<div id="result-interface" class="fade-in">
+  <div class="receipt-card">
+    <div class="receipt-header">
+      <h2>تفاصيل معاملة الضريبة</h2>
+      <p>رقم المعاملة: <span id="display-id">0000000</span></p>
+    </div>
+
+    <div class="receipt-body">
+      <div class="data-row highlight">
+        <span class="data-label">اسم المستفيد</span>
+        <span class="data-value">XXXX</span>
+      </div>
+      
+      <div class="data-row">
+        <span class="data-label">رقم الهاتف</span>
+        <span class="data-value" style="direction: ltr;">XXXX</span>
+      </div>
+
+      <div class="amount-row">
+        <span class="amount-label">مبلغ المنحة المالية</span>
+        <span class="amount-value">350,000 ريال سعودي</span>
+      </div>
+
+      <div class="amount-row tax-row">
+        <span class="amount-label">مبلغ الضريبة البنكية</span>
+        <span class="amount-value">3,000 ريال سعودي</span>
+      </div>
+    </div>
+
+    <div class="receipt-footer">
+      <button class="action-btn btn-primary" onclick="showPaymentInterface()">عرض بيانات السداد التجريبية</button>
+      <button class="action-btn btn-secondary" onclick="goBack()">رجوع للخلف</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= الواجهة الثالثة ================= -->
+<div id="payment-interface" class="fade-in">
+  <div class="payment-card">
+    <div class="payment-header">
+      <h2>بيانات سداد الضريبة البنكية</h2>
+      <p>يرجى إتمام عملية التحويل بعد التحقق من بيانات الحساب أعلاه</p>
+    </div>
+
+    <div class="payment-body">
+      <div class="official-note">
+        <span>!</span> 
+      </div>
+
+      <div class="bank-info-box">
+        <div class="manager-info">
+          <p>رئيس قسم الضريبة البنكية</p>
+          <h4>هيثم علي محمد سعيد</h4>
+        </div>
+
+        <div class="info-line column">
+          <span class="info-title">رقم الحساب /</span>
+          <div class="copy-container">
+            <span class="info-data" id="acc-num">077110010006080274137</span>
+            <button class="copy-btn" onclick="copyAccount()">نسخ الحساب</button>
+          </div>
+        </div>
+
+        <div class="info-line column">
+          <span class="info-title">رقم الآيبان /</span>
+          <div class="copy-container">
+            <span class="info-data" id="iban-num">SA3880000637 6080 1027 4137</span>
+            <button class="copy-btn" onclick="copyIban()">نسخ الآيبان</button>
+          </div>
+        </div>
+
+        <div class="info-line column">
+          <span class="info-title">كود السويفت (SWIFT)</span>
+          <span class="info-data">RJHISARI</span>
+        </div>
+      </div>
+
+      <div class="official-instruction-box">
+        <p>يرجى سداد مبلغ الضريبة البنكية بعد التحقق من بيانات الحساب أعلاه</p>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- شريط التنقل السفلي -->
+<div class="bottom-nav" id="bottomNav">
+  <div class="nav-item" onclick="goToHome()">
+    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span>الرئيسية</span>
+  </div>
+  <div class="nav-item active" onclick="goToTracking()">
+    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    <span>تتبع المعاملة</span>
+  </div>
+</div>
+
+<script>
+// الرقم المعتمد الوحيد للتحقق
+const VALID_TAX_ID = "1000814";
+
+function submitTaxId() {
+  const input = document.getElementById('taxIdInput').value.trim();
+  
+  if (input === "") {
+    alert('الرجاء إدخال رقم الضريبة البنكية أولاً.');
+    return;
+  }
+
+  // التحقق من أن الرقم المدخل هو الرقم المعتمد
+  if (input !== VALID_TAX_ID) {
+    alert('عذراً، رقم الضريبة البنكية المدخل غير صحيح أو غير مسجل في النظام. يرجى التأكد من الرقم والمحاولة مرة أخرى.');
+    return;
+  }
+
+  // إذا كان الرقم صحيحاً، ننتقل للواجهة الثانية
+  document.getElementById('display-id').textContent = input;
+  document.getElementById('main-interface').classList.add('hidden');
+  document.getElementById('main-interface').classList.remove('fade-in');
+  document.getElementById('result-interface').classList.add('show-flex', 'fade-in');
+  document.getElementById('bottomNav').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showPaymentInterface() {
+  document.getElementById('result-interface').classList.remove('show-flex', 'fade-in');
+  document.getElementById('result-interface').style.display = 'none';
+  document.getElementById('payment-interface').classList.add('show-flex', 'fade-in');
+  window.scrollTo(0, 0);
+}
+
+function goToHome() {
+  document.getElementById('result-interface').classList.remove('show-flex', 'fade-in');
+  document.getElementById('result-interface').style.display = 'none';
+  document.getElementById('payment-interface').classList.remove('show-flex', 'fade-in');
+  document.getElementById('payment-interface').style.display = 'none';
+  document.getElementById('main-interface').classList.remove('hidden');
+  document.getElementById('main-interface').classList.add('fade-in');
+  document.getElementById('bottomNav').classList.remove('active');
+  document.getElementById('taxIdInput').value = "";
+  window.scrollTo(0, 0);
+}
+
+function goToTracking() {
+  goToHome();
+  document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyIban() {
+  const ibanText = document.getElementById('iban-num').innerText;
+  const cleanIban = ibanText.replace(/\s+/g, '');
+  navigator.clipboard.writeText(cleanIban).then(() => {
+    alert('تم نسخ رقم الآيبان بنجاح!');
+  }).catch(err => {
+    alert('حدث خطأ أثناء النسخ، يرجى تحديد الرقم ونسخه يدوياً.');
+  });
+}
+
+function copyAccount() {
+  const accText = document.getElementById('acc-num').innerText;
+  const cleanAcc = accText.replace(/\s+/g, '');
+  navigator.clipboard.writeText(cleanAcc).then(() => {
+    alert('تم نسخ رقم الحساب بنجاح!');
+  }).catch(err => {
+    alert('حدث خطأ أثناء النسخ، يرجى تحديد الرقم ونسخه يدوياً.');
+  });
+}
+</script>
+
+</body>
+</html>
